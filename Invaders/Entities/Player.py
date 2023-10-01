@@ -8,6 +8,7 @@ class Player:
         self.dimension = { "w": 50, "h": 50, "screen": (width, height) }
         self.moving = { "l": False, "r": False }
         self.bullets = list()
+        self.alive = True
     
     def move(self):
         if self.moving["l"]:
@@ -18,8 +19,9 @@ class Player:
                 self.position["x"] += self.speed
     
     def shoot(self):
-        if len(self.bullets) < 10:
-            self.bullets.append(Bullet({ "x": (self.position["x"] + (self.dimension["w"]/2)), "y": self.position["y"] }))
+        if len(self.bullets) < 20:
+            self.bullets.append(Bullet({ "x": (self.position["x"] + 10), "y": self.position["y"] }))
+            self.bullets.append(Bullet({ "x": (self.position["x"] + self.dimension["w"] - 10), "y": self.position["y"] }))
 
     def reload(self):
         bullets = list()

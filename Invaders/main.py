@@ -15,8 +15,14 @@ pygame.display.set_caption("Invasores espaciais")
 
 #Player settings
 player = Player(width, height)
-
 enemies = [Enemy(width, height)]
+
+def addText(txt, pos, color, size):                              
+    pygame.font.init()                                
+    font = pygame.font.get_default_font()              
+    useFont = pygame.font.SysFont(font , size)           
+    txtScreen = useFont.render(txt, 1, color)  
+    screen.blit(txtScreen, pos)   
 
 while True:
 
@@ -28,14 +34,18 @@ while True:
 
     #bullets movement 
     for bullet in player.bullets:
-        collide = bullet.move()
-        pygame.draw.rect(screen, (255, 255, 255), bullet.rect())
+        bullet.move()
+        pygame.draw.rect(screen, (0, 255, 0), bullet.rect())
     player.reload()
 
     #enemies movement
+    alive = list()
     for enemy in enemies:
-        enemy.move()
-        pygame.draw.rect(screen, (255, 255, 255), enemy.rect())
+        enemy.move(player)  
+        if enemy.alive:
+            alive.append(enemy)
+        pygame.draw.rect(screen, enemy.color, enemy.rect())
+    enemies = alive
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -61,5 +71,14 @@ while True:
 
             if event.key == pygame.K_RIGHT:
                 player.moving["r"] = False
+    
+    addText(str(player.points), (20, 20), (255, 255, 255), 40)
+    
+    if len(enemies) != 8:
+        enemies.append(Enemy(width, height))
+  
+    if (not player.alive) or (player.points < 0):
+        pygame.quit()
+        sys.exit()
 
     pygame.display.update()
